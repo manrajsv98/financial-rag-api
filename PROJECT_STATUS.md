@@ -1,20 +1,18 @@
 ## Last Completed Task
-Implemented and tested OpenAI embeddings with ChromaDB vector storage. Successfully inserted chunks and retrieved relevant results for a semantic query.
+Built and tested reusable retrieval module. The retrieve() function embeds a query, searches ChromaDB, and returns ranked chunks with text, metadata, and distance scores.
 
 ## Current Task
-Embeddings and vector store complete.
+Retrieval module complete.
 
 ## Next Task
-Build retrieval module to wrap vector search into a reusable retrieve(query, top_k) function.
+Build LLM answer generation using retrieved context.
 
 ## Commands Run
-- python3 -m app.test_vector_store
+- python3 -m app.test_retrieval
 
 ## Files Created
-- app/config.py
-- app/embeddings.py
-- app/vector_store.py
-- app/test_vector_store.py
+- app/retrieval.py
+- app/test_retrieval.py
 
 ## Bugs / Issues
-Resolved OpenAI quota/billing issue.
+None
