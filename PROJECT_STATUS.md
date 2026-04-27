@@ -1,18 +1,18 @@
 ## Last Completed Task
-Built and tested LLM answer generation using retrieved context. The system now generates grounded answers and returns source metadata.
+Built and ran basic RAG evaluation. Evaluation checks keyword match and retrieval hit against expected pages. Both test questions achieved Keyword Score 1.0 and Retrieval Hit True.
 
 ## Current Task
-LLM generation complete.
+Evaluation complete.
 
 ## Next Task
-Create FastAPI /ask endpoint to expose the RAG pipeline through the API.
+Add basic unit tests with pytest.
 
 ## Commands Run
-- python3 -m app.test_generation
+- python3 -m app.evaluation
 
 ## Files Created
-- app/generation.py
-- app/test_generation.py
+- data/eval/eval_questions.json
+- app/evaluation.py
 
 ## Bugs / Issues
 None
