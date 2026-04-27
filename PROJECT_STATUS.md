@@ -1,18 +1,18 @@
 ## Last Completed Task
-Built and tested reusable retrieval module. The retrieve() function embeds a query, searches ChromaDB, and returns ranked chunks with text, metadata, and distance scores.
+Built and tested LLM answer generation using retrieved context. The system now generates grounded answers and returns source metadata.
 
 ## Current Task
-Retrieval module complete.
+LLM generation complete.
 
 ## Next Task
-Build LLM answer generation using retrieved context.
+Create FastAPI /ask endpoint to expose the RAG pipeline through the API.
 
 ## Commands Run
-- python3 -m app.test_retrieval
+- python3 -m app.test_generation
 
 ## Files Created
-- app/retrieval.py
-- app/test_retrieval.py
+- app/generation.py
+- app/test_generation.py
 
 ## Bugs / Issues
 None
