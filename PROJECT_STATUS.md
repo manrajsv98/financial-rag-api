@@ -1,18 +1,20 @@
 ## Last Completed Task
-Built and manually tested PDF ingestion. The loader extracts text page-by-page and returns metadata including source file and page number.
+Implemented and tested OpenAI embeddings with ChromaDB vector storage. Successfully inserted chunks and retrieved relevant results for a semantic query.
 
 ## Current Task
-PDF ingestion complete.
+Embeddings and vector store complete.
 
 ## Next Task
-Build text chunking with metadata preservation.
+Build retrieval module to wrap vector search into a reusable retrieve(query, top_k) function.
 
 ## Commands Run
-- python3 app/test_ingestion.py
+- python3 -m app.test_vector_store
 
 ## Files Created
-- app/ingestion.py
-- app/test_ingestion.py
+- app/config.py
+- app/embeddings.py
+- app/vector_store.py
+- app/test_vector_store.py
 
 ## Bugs / Issues
-None
+Resolved OpenAI quota/billing issue.
