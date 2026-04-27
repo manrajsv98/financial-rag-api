@@ -1,18 +1,20 @@
 ## Last Completed Task
-Built and ran basic RAG evaluation. Evaluation checks keyword match and retrieval hit against expected pages. Both test questions achieved Keyword Score 1.0 and Retrieval Hit True.
+Added initial pytest tests for the health endpoint and chunking logic. Tests pass successfully.
 
 ## Current Task
-Evaluation complete.
+Unit testing complete.
 
 ## Next Task
-Add basic unit tests with pytest.
+Add Docker support.
 
 ## Commands Run
-- python3 -m app.evaluation
+- pytest
 
 ## Files Created
-- data/eval/eval_questions.json
-- app/evaluation.py
+- tests/test_health.py
+- tests/test_chunking.py
+- pytest.ini
+- app/__init__.py
 
 ## Bugs / Issues
-None
+Resolved pytest import path issue using pytest.ini and app/__init__.py.
