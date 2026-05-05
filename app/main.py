@@ -1,6 +1,10 @@
 import logging
 from fastapi import FastAPI
 
+import os
+import tempfile
+from fastapi import UploadFile, File 
+
 from app.schemas import AskRequest, AskResponse, IngestRequest, IngestResponse
 from app.retrieval import retrieve
 from app.generation import generate_answer
@@ -8,6 +12,7 @@ from app.ingestion import load_pdf
 from app.chunking import chunk_documents
 from app.embeddings import create_embedding
 from app.vector_store import add_chunks_to_vector_store
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -57,28 +62,54 @@ def ask_question(request: AskRequest):
         }
 
 @app.post("/ingest", response_model=IngestResponse)
-def ingest_document(request: IngestRequest):
-    logger.info(f"Starting ingestion for file: {request.file_path}")
+async def ingest_document(
+    file: UploadFile = File(...),
+    chunk_size: int = 500,
+    overlap: int = 100,
+):
+    logger.info(f"Starting ingestion for uploaded file: {file.filename}")
 
-    documents = load_pdf(request.file_path)
-    chunks = chunk_documents(
-        documents,
-        chunk_size=request.chunk_size,
-        overlap=request.overlap,
-    )
+    if not file.filename.endswith(".pdf"):
+        return {
+            "status": "failed",
+            "file_path": file.filename,
+            "chunks_created": 0,
+            "chunks_inserted": 0,
+        }
 
-    logger.info(f"Created {len(chunks)} chunks")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+        file_contents = await file.read()
+        temp_file.write(file_contents)
+        temp_file_path = temp_file.name
 
-    for chunk in chunks:
-        chunk["embedding"] = create_embedding(chunk["text"])
+    try:
+        documents = load_pdf(temp_file_path)
 
-    inserted_count = add_chunks_to_vector_store(chunks)
+        # Replace temp source path with original filename for cleaner citations
+        for doc in documents:
+            doc["metadata"]["source"] = file.filename
 
-    logger.info(f"Inserted {inserted_count} chunks into vector store")
+        chunks = chunk_documents(
+            documents,
+            chunk_size=chunk_size,
+            overlap=overlap,
+        )
 
-    return {
-        "status": "success",
-        "file_path": request.file_path,
-        "chunks_created": len(chunks),
-        "chunks_inserted": inserted_count,
-    }
+        logger.info(f"Created {len(chunks)} chunks")
+
+        for chunk in chunks:
+            chunk["embedding"] = create_embedding(chunk["text"])
+
+        inserted_count = add_chunks_to_vector_store(chunks)
+
+        logger.info(f"Inserted {inserted_count} chunks into vector store")
+
+        return {
+            "status": "success",
+            "file_path": file.filename,
+            "chunks_created": len(chunks),
+            "chunks_inserted": inserted_count,
+        }
+
+    finally:
+        os.remove(temp_file_path)
