@@ -5,24 +5,56 @@ import streamlit as st
 # This is your deployed FastAPI backend URL on Render.
 # Streamlit will send API requests to this backend.
 
-API_BASE_URL = "https://financial-rag-api-i8uu.onrender.com"
-
+#API_BASE_URL = "https://financial-rag-api-i8uu.onrender.com"
+API_BASE_URL = "http://127.0.0.1:8000"
 
 
 # Basic page configuration for the Streamlit app.
 st.set_page_config(
-    page_title="Financial Document Intelligence",
-    page_icon="📄",
-    layout="wide",
+    page_title="Document Intelligence",
+    page_icon="📈",
 )
 
 
 # Main page title and description.
-st.title("📄 Financial Document Intelligence RAG")
+st.title("📈 Document Intelligence")
+
+
+st.divider()
+
 st.write(
-    "Ask questions over ingested financial/business documents and receive grounded answers with sources."
+    "Ask questions over ingested documents and receive grounded answers with sources."
 )
 
+st.divider()
+
+st.html(
+    """
+    <div style='padding: 1.5rem 1.75rem; border-radius: 18px; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); border: 1px solid #374151; margin-bottom: 1.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.18);'>
+        <h2 style='margin: 0 0 0.75rem 0; color: #ffffff; font-size: 1.8rem;'>🚀 Quick Start Guide</h2>
+        <p style='margin: 0 0 1rem 0; color: #d1d5db; font-size: 1rem;'>Upload a PDF, process it, then ask questions grounded in the document.</p>
+
+        <div style='display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;'>
+            <div style='background:#374151; padding:0.9rem; border-radius:12px; color:white;'>
+                <strong>1. Upload</strong><br>
+                <span style='color:#d1d5db;'>Upload a PDF in the sidebar.</span>
+            </div>
+            <div style='background:#374151; padding:0.9rem; border-radius:12px; color:white;'>
+                <strong>2. Configure</strong><br>
+                <span style='color:#d1d5db;'>Set chunk size and overlap.</span>
+            </div>
+            <div style='background:#374151; padding:0.9rem; border-radius:12px; color:white;'>
+                <strong>3. Ask</strong><br>
+                <span style='color:#d1d5db;'>Enter your question below.</span>
+            </div>
+            <div style='background:#374151; padding:0.9rem; border-radius:12px; color:white;'>
+                <strong>4. Review</strong><br>
+                <span style='color:#d1d5db;'>Check answer and sources.</span>
+            </div>
+        </div>
+    </div>
+    """
+)
 
 # -----------------------------
 # Sidebar: Document ingestion
@@ -86,6 +118,8 @@ if st.sidebar.button("Ingest Uploaded Document"):
 # Main area: Question answering
 # -----------------------------
 
+st.divider()
+
 st.subheader("Ask a question")
 
 # User question input.
@@ -136,3 +170,4 @@ if st.button("Ask"):
         else:
             st.error("Request failed")
             st.text(response.text)
+
