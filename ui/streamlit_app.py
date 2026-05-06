@@ -5,9 +5,7 @@ import streamlit as st
 # This is your deployed FastAPI backend URL on Render.
 # Streamlit will send API requests to this backend.
 
-#API_BASE_URL = "https://financial-rag-api-i8uu.onrender.com"
-API_BASE_URL = "http://127.0.0.1:8000"
-
+API_BASE_URL = "https://financial-rag-api-i8uu.onrender.com"
 
 # Basic page configuration for the Streamlit app.
 st.set_page_config(
