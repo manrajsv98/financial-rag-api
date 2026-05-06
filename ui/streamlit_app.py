@@ -123,7 +123,7 @@ st.subheader("Ask a question")
 # User question input.
 question = st.text_input(
     "Question",
-    value="Which airlines have ordered Overture aircraft?",
+    value="What is your question?",
 )
 
 # Controls how many chunks the retriever returns.
