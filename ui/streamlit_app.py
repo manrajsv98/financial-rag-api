@@ -6,6 +6,7 @@ import streamlit as st
 # Streamlit will send API requests to this backend.
 
 API_BASE_URL = "https://financial-rag-api-i8uu.onrender.com"
+MAX_FILE_SIZE_MB = 5
 
 # Basic page configuration for the Streamlit app.
 st.set_page_config(
@@ -80,47 +81,63 @@ chunk_size = st.sidebar.number_input(
     "Chunk size",
     min_value=50,
     max_value=1000,
-    value=100,
+    value=500,
 )
 
 overlap = st.sidebar.number_input(
     "Overlap",
     min_value=0,
     max_value=300,
-    value=20,
+    value=50,
 )
 
 if st.sidebar.button("Ingest Uploaded Document"):
     if uploaded_file is None:
         st.sidebar.warning("Please upload a PDF first.")
+
+    elif uploaded_file.size > MAX_FILE_SIZE_MB * 1024 * 1024:
+        st.sidebar.error(
+            f"File too large. Please upload a PDF under {MAX_FILE_SIZE_MB}MB."
+        )
+
     else:
-        with st.spinner("Uploading and ingesting document..."):
-            files = {
-                "file": (
-                    uploaded_file.name,
-                    uploaded_file.getvalue(),
-                    "application/pdf",
+        try:
+            with st.spinner("Uploading and ingesting document..."):
+                files = {
+                    "file": (
+                        uploaded_file.name,
+                        uploaded_file.getvalue(),
+                        "application/pdf",
+                    )
+                }
+
+                data = {
+                    "chunk_size": chunk_size,
+                    "overlap": overlap,
+                }
+
+                response = requests.post(
+                    f"{API_BASE_URL}/ingest",
+                    files=files,
+                    data=data,
+                    timeout=300,
                 )
-            }
 
-            data = {
-                "chunk_size": chunk_size,
-                "overlap": overlap,
-            }
+            if response.status_code == 200:
+                st.sidebar.success("Document ingested successfully")
+                st.sidebar.json(response.json())
+            else:
+                st.sidebar.error("Ingestion failed")
+                st.sidebar.text(response.text)
 
-            response = requests.post(
-                f"{API_BASE_URL}/ingest",
-                files=files,
-                data=data,
-                timeout=180,
+        except requests.exceptions.ReadTimeout:
+            st.sidebar.error(
+                "Ingestion took too long. Try a smaller PDF or use a larger chunk size."
             )
 
-        if response.status_code == 200:
-            st.sidebar.success("Document ingested successfully")
-            st.sidebar.json(response.json())
-        else:
-            st.sidebar.error("Ingestion failed")
-            st.sidebar.text(response.text)
+        except requests.exceptions.RequestException as error:
+            st.sidebar.error("Could not connect to the backend service.")
+            st.sidebar.text(str(error))
 
 
 # -----------------------------
