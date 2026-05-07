@@ -82,6 +82,10 @@ chunk_size = st.sidebar.number_input(
     min_value=50,
     max_value=1000,
     value=500,
+    help=(
+        "Controls how much text is stored in each chunk. "
+        "Larger chunks provide more context but may reduce retrieval precision."
+    ),
 )
 
 overlap = st.sidebar.number_input(
@@ -89,6 +93,10 @@ overlap = st.sidebar.number_input(
     min_value=0,
     max_value=300,
     value=50,
+    help=(
+        "Controls how much text overlaps between chunks. "
+        "Higher overlap can improve context continuity between chunks."
+    ),
 )
 
 if st.sidebar.button("Ingest Uploaded Document"):
