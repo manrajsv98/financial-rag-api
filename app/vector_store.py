@@ -23,6 +23,9 @@ def add_chunks_to_vector_store(chunks: list[dict]) -> int:
         metadatas.append(chunk["metadata"])
         embeddings.append(chunk["embedding"])
 
+    if not embeddings:
+        return 0
+
     collection.add(
         ids=ids,
         documents=documents,

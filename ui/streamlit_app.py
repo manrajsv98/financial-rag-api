@@ -127,7 +127,10 @@ if st.sidebar.button("Ingest Uploaded Document"):
                 st.sidebar.success("Document ingested successfully")
                 st.sidebar.json(response.json())
             else:
-                st.sidebar.error("Ingestion failed")
+                st.sidebar.error(
+                "No readable text was found in this PDF. "
+                "Please upload a text-based PDF."
+                )
                 st.sidebar.text(response.text)
 
         except requests.exceptions.ReadTimeout:
