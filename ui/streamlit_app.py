@@ -194,6 +194,13 @@ if st.button("Ask"):
 
         # If API call fails, show error.
         else:
-            st.error("Request failed")
-            st.text(response.text)
+            try:
+                error_message = response.json().get(
+                    "detail",
+                    "Request failed",
+                )
+            except Exception:
+                error_message = "Request failed"
+
+            st.error(error_message)
 

@@ -1,4 +1,5 @@
-from openai import OpenAI
+from fastapi import HTTPException
+from openai import OpenAI, OpenAIError
 
 from app.config import settings
 
@@ -41,15 +42,43 @@ Context:
 {context}
 """
 
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        input=prompt,
-    )
+    try:
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt,
+        )
+
+    except OpenAIError as error:
+        error_message = str(error)
+
+        if "insufficient_quota" in error_message:
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "The AI service is temporarily unavailable because "
+                    "the API quota has been exhausted."
+                ),
+            )
+
+        if "rate_limit" in error_message.lower() or "429" in error_message:
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "The AI service is temporarily busy. "
+                    "Please try again in a few minutes."
+                ),
+            )
+
+        raise HTTPException(
+            status_code=500,
+            detail="An AI service error occurred. Please try again later.",
+        )
 
     sources = []
 
     for chunk in retrieved_chunks:
         metadata = chunk["metadata"]
+
         sources.append(
             {
                 "source": metadata.get("source"),
