@@ -1,4 +1,4 @@
-# Financial Document Intelligence
+# Document Intelligence
 
 A full-stack Retrieval-Augmented Generation (RAG) application for querying PDF documents using natural language.
 
