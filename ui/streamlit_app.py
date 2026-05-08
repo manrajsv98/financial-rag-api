@@ -85,6 +85,7 @@ chunk_size = st.sidebar.number_input(
     help=(
         "Controls how much text is stored in each chunk. "
         "Larger chunks provide more context but may reduce retrieval precision."
+        "Max "
     ),
 )
 
