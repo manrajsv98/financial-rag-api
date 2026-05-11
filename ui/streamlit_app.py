@@ -16,7 +16,7 @@ st.set_page_config(
 
 
 # Main page title and description.
-st.title("📈 Document Intelligence")
+st.title("📈 Document Intelligence (v1)")
 
 
 st.divider()
