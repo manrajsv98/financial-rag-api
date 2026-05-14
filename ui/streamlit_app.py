@@ -10,7 +10,7 @@ MAX_FILE_SIZE_MB = 5
 
 # Basic page configuration for the Streamlit app.
 st.set_page_config(
-    page_title="Document Intelligence",
+    page_title="Document Intelligence v1",
     page_icon="📈",
 )
 
